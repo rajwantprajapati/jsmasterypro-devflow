@@ -1,3 +1,3 @@
 export default function Home() {
-  return <h1>We dev flow code will come here!</h1>;
+  return <h1>Hey there! This is a Next.js app.</h1>;
 }
