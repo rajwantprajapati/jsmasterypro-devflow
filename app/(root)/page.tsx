@@ -1,4 +1,5 @@
 import { auth, signOut } from "@/auth";
+import QuestionCard from "@/components/cards/QuestionCard";
 import HomeFilter from "@/components/filters/HomeFilter";
 import LocalSearch from "@/components/search/LocalSearch";
 import { Button } from "@/components/ui/button";
@@ -12,10 +13,15 @@ const questions = [
     description: "I want to learn React, can anyone help me?",
     tags: [
       { _id: "1", name: "React" },
-      { _id: "2", name: "React" },
+      { _id: "2", name: "JavaScript" },
     ],
-    author: { _id: "1", name: "John Doe" },
-    upvotes: 10,
+    author: {
+      _id: "1",
+      name: "John Doe",
+      image:
+        "https://png.pngtree.com/png-vector/20220817/ourmid/pngtree-man-avatar-with-circle-frame-vector-ilustration-png-image_6110328.png",
+    },
+    upVotes: 10,
     answers: 5,
     views: 100,
     createdAt: new Date(),
@@ -28,8 +34,13 @@ const questions = [
       { _id: "1", name: "JavaScript" },
       { _id: "2", name: "JavaScript" },
     ],
-    author: { _id: "1", name: "John Doe" },
-    upvotes: 10,
+    author: {
+      _id: "1",
+      name: "John Doe",
+      image:
+        "https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Picture.png",
+    },
+    upVotes: 10,
     answers: 5,
     views: 100,
     createdAt: new Date(),
@@ -81,7 +92,7 @@ const Home = async ({ searchParams }: SearchParams) => {
 
       <div className="mt-10 flex w-full flex-col gap-6">
         {filteredQuestions.map((question) => (
-          <h1 key={question._id}>{question.title}</h1>
+          <QuestionCard key={question._id} question={question} />
         ))}
       </div>
     </>
