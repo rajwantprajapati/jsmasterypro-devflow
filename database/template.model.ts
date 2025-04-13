@@ -1,9 +1,8 @@
 import { model, models, Schema } from "mongoose";
 
-interface IQuestion {}
+interface ITag {}
 
-const QuestionSchema = new Schema<IQuestion>({});
+const TagSchema = new Schema<ITag>({}, { timestamps: true });
 
-const Question =
-  models?.Question || model<IQuestion>("Question", QuestionSchema);
-export default Question;
+const Tag = models?.Tag || model<ITag>("Tag", TagSchema);
+export default Tag;
