@@ -1,4 +1,4 @@
-import { model, models, Schema, Types } from "mongoose";
+import { model, models, Schema, Types, Document } from "mongoose";
 
 interface IInteraction {
     user: Types.ObjectId; // Reference to the User who performed the interaction
@@ -6,6 +6,8 @@ interface IInteraction {
     actionId: Types.ObjectId; // ID of the entity being interacted with (e.g., question, answer)
     actionType: "question" | "answer"; // Type of the entity being interacted with
 }
+
+ export interface IInteractionDoc extends IInteraction, Document {}
 
 const InteractionSchema = new Schema<IInteraction>({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true }, // Reference to the User who performed the interaction

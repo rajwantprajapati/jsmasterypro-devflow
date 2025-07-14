@@ -1,9 +1,11 @@
-import {model, models, Schema, Types} from 'mongoose'
+import {model, models, Schema, Types, Document} from 'mongoose'
 
 interface ICollection {
     author: Types.ObjectId; // Reference to the User who created the collection
     question: Types.ObjectId; // Reference to the Question in the collection
 }
+
+export interface ICollectionDoc extends ICollection, Document {}
 
 const CollectionSchema = new Schema<ICollection>({
     author: {type: Schema.Types.ObjectId, ref: 'User', required: true},
