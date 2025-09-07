@@ -3,69 +3,38 @@ import HomeFilter from "@/components/filters/HomeFilter";
 import LocalSearch from "@/components/search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import ROUTES from "@/constants/routes";
+import { getQuestions } from "@/lib/actions/question.action";
 
 import Link from "next/link";
-
-const questions = [
-  {
-    _id: "1",
-    title: "How to learn React?",
-    description: "I want to learn React, can anyone help me?",
-    tags: [
-      { _id: "1", name: "React" },
-      { _id: "2", name: "JavaScript" },
-    ],
-    author: {
-      _id: "1",
-      name: "John Doe",
-      image:
-        "https://png.pngtree.com/png-vector/20220817/ourmid/pngtree-man-avatar-with-circle-frame-vector-ilustration-png-image_6110328.png",
-    },
-    upVotes: 10,
-    answers: 5,
-    views: 100,
-    createdAt: new Date(),
-  },
-  {
-    _id: "2",
-    title: "How to learn JavaScript?",
-    description: "I want to learn JavaScript, can anyone help me?",
-    tags: [
-      { _id: "1", name: "JavaScript" },
-      { _id: "2", name: "JavaScript" },
-    ],
-    author: {
-      _id: "1",
-      name: "John Doe",
-      image:
-        "https://www.pngall.com/wp-content/uploads/12/Avatar-Profile-PNG-Picture.png",
-    },
-    upVotes: 10,
-    answers: 5,
-    views: 100,
-    createdAt: new Date(),
-  },
-];
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
 }
 
 const Home = async ({ searchParams }: SearchParams) => {
-  const { query = "", filter = "" } = await searchParams;
+  const { page, pageSize, query, filter } = await searchParams;
 
-  const filteredQuestions = questions.filter((question) => {
-    const matchesQuery = question.title
-      .toLowerCase()
-      .includes(query.toLowerCase());
-    const matchesFilter = filter
-      ? question.tags.some((tag) =>
-          tag.name.toLowerCase().includes(filter.toLowerCase())
-        )
-      : true;
-
-    return matchesQuery && matchesFilter;
+  const { success, data, error } = await getQuestions({
+    page: Number(page) || 1,
+    pageSize: Number(pageSize) || 10,
+    query: query || "",
+    filter: filter || "",
   });
+
+  const { questions } = data || {};
+
+  // const filteredQuestions = questions.filter((question) => {
+  //   const matchesQuery = question.title
+  //     .toLowerCase()
+  //     .includes(query.toLowerCase());
+  //   const matchesFilter = filter
+  //     ? question.tags.some((tag) =>
+  //         tag.name.toLowerCase().includes(filter.toLowerCase())
+  //       )
+  //     : true;
+
+  //   return matchesQuery && matchesFilter;
+  // });
 
   return (
     <>
@@ -90,11 +59,25 @@ const Home = async ({ searchParams }: SearchParams) => {
 
       <HomeFilter />
 
-      <div className="mt-10 flex w-full flex-col gap-6">
-        {filteredQuestions.map((question) => (
-          <QuestionCard key={question._id} question={question} />
-        ))}
-      </div>
+      {success ? (
+        <div className="mt-10 flex w-full flex-col gap-6">
+          {questions && questions.length > 0 ? (
+            questions.map((question) => (
+              <QuestionCard key={question._id} question={question} />
+            ))
+          ) : (
+            <div className="mt-10 flex w-full items-center justify-center">
+              <p className="text-dark400_light700">No questions found</p>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="mt-10 flex w-full items-center justify-center">
+          <p className="text-dark400_light700">
+            {error?.message || "Failed to fetch questions"}
+          </p>
+        </div>
+      )}
     </>
   );
 };

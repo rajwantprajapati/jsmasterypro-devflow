@@ -1,16 +1,17 @@
-import ROUTES from '@/constants/routes';
-import { getTimeStamp } from '@/lib/utils';
-import Link from 'next/link';
-import React from 'react'
-import TagCard from './TagCard';
-import Metric from '../Metric';
+import ROUTES from "@/constants/routes";
+import { getTimeStamp } from "@/lib/utils";
+import Link from "next/link";
+import React from "react";
+import TagCard from "./TagCard";
+import Metric from "../Metric";
+import { Question, Tag } from "@/types/global";
 
 interface QuestionCardProps {
-    question: Question
+  question: Question;
 }
 
 const QuestionCard = ({
-  question: { _id, title, tags, author, createdAt, upVotes, answers, views },
+  question: { _id, title, tags, author, createdAt, upvotes, answers, views },
 }: QuestionCardProps) => {
   return (
     <div className="card-wrapper rounded-[10px] p-9 sm:px-11">
@@ -34,7 +35,7 @@ const QuestionCard = ({
         ))}
       </div>
 
-      <div className='flex-between mt-6 w-full flex-wrap gap-3'>
+      <div className="flex-between mt-6 w-full flex-wrap gap-3">
         <Metric
           imgUrl={author.image}
           alt={author.name}
@@ -45,11 +46,11 @@ const QuestionCard = ({
           isAuthor
         />
 
-        <div className='flex items-center gap-3 max-sm:flex-wrap max-sm:justify-start'>
+        <div className="flex items-center gap-3 max-sm:flex-wrap max-sm:justify-start">
           <Metric
             imgUrl="/icons/like.svg"
             alt="like"
-            value={upVotes}
+            value={upvotes}
             title=" Votes"
             textStyles="small-medium text-dark400_light800"
           />
@@ -75,4 +76,4 @@ const QuestionCard = ({
   );
 };
 
-export default QuestionCard
+export default QuestionCard;
