@@ -17,8 +17,6 @@ import {
   ErrorResponse,
   PaginatedSearchParams,
 } from "@/types/global";
-import { revalidatePath } from "next/cache";
-import ROUTES from "@/constants/routes";
 
 export async function createQuestion(
   params: CreateQuestionParams
@@ -318,8 +316,6 @@ export async function incrementViews(
 
     question.views += 1;
     await question.save();
-
-    revalidatePath(ROUTES.QUESTION(questionId));
 
     return { success: true, data: { views: question.views } };
   } catch (error) {
