@@ -1,4 +1,4 @@
-"user server";
+"use server";
 
 import {
   CreateVoteParams,
@@ -16,6 +16,8 @@ import {
 import handleError from "../handlers/error";
 import mongoose, { ClientSession } from "mongoose";
 import { Answer, Question, Vote } from "@/database";
+import { revalidatePath } from "next/cache";
+import ROUTES from "@/constants/routes";
 
 export async function updateVoteCount(
   params: UpdateVoteCountParams,
@@ -39,7 +41,7 @@ export async function updateVoteCount(
   try {
     const result = await Model.findByIdAndUpdate(
       targetId,
-      { $inc: { [voteField]: change - 1 } },
+      { $inc: { [voteField]: change } },
       { new: true, session }
     );
 
@@ -103,14 +105,29 @@ export async function createVote(
           { new: true, session }
         );
         await updateVoteCount(
+          { targetId, targetType, voteType: existingVote.voteType, change: -1 },
+          session
+        );
+        await updateVoteCount(
           { targetId, targetType, voteType, change: 1 },
           session
         );
       }
     } else {
-      await Vote.create([{ targetId, targetType, voteType, change: 1 }], {
-        session,
-      });
+      // INFO: If user has not voted yet, create a new vote
+      await Vote.create(
+        [
+          {
+            author: userId,
+            actionId: targetId,
+            actionType: targetType,
+            voteType,
+          },
+        ],
+        {
+          session,
+        }
+      );
       await updateVoteCount(
         { targetId, targetType, voteType, change: 1 },
         session
@@ -119,6 +136,10 @@ export async function createVote(
 
     await session.commitTransaction();
     session.endSession();
+
+    revalidatePath(ROUTES.QUESTION(targetId));
+
+    return { success: true };
   } catch (error) {
     await session.abortTransaction();
     session.endSession();

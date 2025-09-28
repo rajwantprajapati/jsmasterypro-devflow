@@ -1,23 +1,35 @@
 "use client";
 
 import { toast } from "@/hooks/use-toast";
+import { createVote } from "@/lib/actions/vote.action";
 import { formatNumber } from "@/lib/utils";
+import { HasVotedResponse } from "@/types/action";
+import { ActionResponse } from "@/types/global";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 
 interface Params {
   upvotes: number;
   downvotes: number;
-  hasupVoted: boolean;
-  hasdownVoted: boolean;
+  targetType: "question" | "answer";
+  targetId: string;
+  hasVotedPromise: Promise<ActionResponse<HasVotedResponse>>;
 }
 
-const Votes = ({ upvotes, hasupVoted, downvotes, hasdownVoted }: Params) => {
+const Votes = ({
+  upvotes,
+  targetType,
+  downvotes,
+  targetId,
+  hasVotedPromise,
+}: Params) => {
   const session = useSession();
   const userId = session?.data?.user?.id;
 
   const [isLoading, setIsLoading] = useState(false);
+  const { success, data } = use(hasVotedPromise);
+  const { hasUpvoted, hasDownvoted } = data || {};
 
   const handleVote = async (voteType: "upvote" | "downvote") => {
     if (!userId) {
@@ -28,10 +40,22 @@ const Votes = ({ upvotes, hasupVoted, downvotes, hasdownVoted }: Params) => {
     }
 
     try {
+      const result = await createVote({ targetId, targetType, voteType });
+
+      if (!result.success) {
+        return toast({
+          title: "Failed to vote",
+          description:
+            result.error?.message ||
+            "An error occurred while voting, please try again later",
+          variant: "destructive",
+        });
+      }
+
       const successMessage =
         voteType === "upvote"
-          ? `Upvote ${!hasupVoted ? "added" : "removed"} successfully`
-          : `Downvote ${!hasdownVoted ? "added" : "removed"} successfully`;
+          ? `Upvote ${!hasUpvoted ? "added" : "removed"} successfully`
+          : `Downvote ${!hasDownvoted ? "added" : "removed"} successfully`;
 
       toast({
         title: successMessage,
@@ -52,7 +76,9 @@ const Votes = ({ upvotes, hasupVoted, downvotes, hasdownVoted }: Params) => {
     <div className="flex-center gap-2.5">
       <div className="flex-center gap-1.5">
         <Image
-          src={hasupVoted ? "/icons/upvoted.svg" : "/icons/upvote.svg"}
+          src={
+            success && hasUpvoted ? "/icons/upvoted.svg" : "/icons/upvote.svg"
+          }
           width={18}
           height={18}
           alt="upvote"
@@ -69,7 +95,11 @@ const Votes = ({ upvotes, hasupVoted, downvotes, hasdownVoted }: Params) => {
       </div>
       <div className="flex-center gap-1.5">
         <Image
-          src={hasdownVoted ? "/icons/downvoted.svg" : "/icons/downvote.svg"}
+          src={
+            success && hasDownvoted
+              ? "/icons/downvoted.svg"
+              : "/icons/downvote.svg"
+          }
           width={18}
           height={18}
           alt="upvote"
