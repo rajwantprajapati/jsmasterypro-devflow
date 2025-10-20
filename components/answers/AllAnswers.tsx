@@ -5,12 +5,22 @@ import { EMPTY_ANSWERS } from "@/constants/states";
 import AnswerCard from "../cards/AnswerCard";
 import CommonFilters from "../filters/CommonFilters";
 import { AnswerFilters } from "@/constants/filter";
+import Pagination from "../Pagination";
 
 interface Props extends ActionResponse<Answer[]> {
   totalAnswers: number;
+  page: number;
+  isNext: boolean;
 }
 
-const AllAnswers = ({ success, data, totalAnswers, error }: Props) => {
+const AllAnswers = ({
+  success,
+  data,
+  totalAnswers,
+  error,
+  page,
+  isNext,
+}: Props) => {
   return (
     <div className="mt-11">
       <div className="flex items-center justify-between">
@@ -34,6 +44,8 @@ const AllAnswers = ({ success, data, totalAnswers, error }: Props) => {
           answers.map((answer) => <AnswerCard key={answer._id} {...answer} />)
         }
       />
+
+      <Pagination page={page} isNext={isNext} />
     </div>
   );
 };
