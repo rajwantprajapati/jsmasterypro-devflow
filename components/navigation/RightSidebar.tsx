@@ -3,63 +3,83 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import TagCard from "../cards/TagCard";
+import { getHotQuestions } from "@/lib/actions/question.action";
+import DataRenderer from "../DataRenderer";
+import { getTopTags } from "@/lib/actions/tag.action";
 
-const hotQuestions = [
-  { _id: "1", title: "What is React virtual DOM?" },
-  { _id: "2", title: "How does useState work?" },
-  { _id: "3", title: "What is Redux Toolkit?" },
-  { _id: "4", title: "How to use useEffect?" },
-  { _id: "5", title: "What is useSelector in Redux?" },
-];
+const RightSidebar = async () => {
+  const { success, data: hotQuestions, error } = await getHotQuestions();
+  const {
+    success: tagSuccess,
+    data: popularTags,
+    error: tagError,
+  } = await getTopTags();
 
-const popularTags = [
-  { _id: "1", name: "react", questions: 100 },
-  { _id: "2", name: "javascript", questions: 200 },
-  { _id: "3", name: "typescript", questions: 150 },
-  { _id: "4", name: "nextjs", questions: 50 },
-  { _id: "5", name: "react-query", questions: 75 },
-];
-
-const RightSidebar = () => {
   return (
     <section className="background-light900_dark200 light-border sticky right-0 top-0  h-screen w-[350px] overflow-y-auto border-l p-6 pt-36 shadow-light-300 dark:shadow-none max-xl:hidden">
       <div>
         <h3 className="h3-bold text-dark200_light900">Top Questions</h3>
 
-        <div className="mt-7 flex w-full flex-col gap-[30px]">
-          {hotQuestions.map(({ _id, title }) => (
-            <Link
-              href={ROUTES.PROFILE(_id)}
-              key={_id}
-              className="flex cursor-pointer items-center justify-between gap-7"
-            >
-              <p className="body-medium text-dark500_light700">{title}</p>
-              <Image
-                src="/icons/chevron-right.svg"
-                alt="Chevron"
-                width={20}
-                height={20}
-                className="invert-colors"
-              />
-            </Link>
-          ))}
-        </div>
+        <DataRenderer
+          data={hotQuestions}
+          empty={{
+            title: "No Question found",
+            message: "No Questions have been asked yet",
+          }}
+          success={success}
+          error={error}
+          render={(hotQuestions) => (
+            <div className="mt-7 flex w-full flex-col gap-[30px]">
+              {hotQuestions.map(({ _id, title }) => (
+                <Link
+                  href={ROUTES.QUESTION(_id)}
+                  key={_id}
+                  className="flex cursor-pointer items-center justify-between gap-7"
+                >
+                  <p className="body-medium text-dark500_light700 line-clamp-2">
+                    {title}
+                  </p>
+                  <Image
+                    src="/icons/chevron-right.svg"
+                    alt="Chevron"
+                    width={20}
+                    height={20}
+                    className="invert-colors"
+                  />
+                </Link>
+              ))}
+            </div>
+          )}
+        />
       </div>
 
       <div className="mt-16">
         <h3 className="h3-bold text-dark200_light900">Popular Tags</h3>
 
         <div className="mt-7 flex flex-col gap-4">
-          {popularTags.map(({ _id, name, questions }) => (
-            <TagCard
-              key={_id}
-              _id={_id}
-              name={name}
-              questions={questions}
-              showCount
-              compact
-            />
-          ))}
+          <DataRenderer
+            data={popularTags}
+            empty={{
+              title: "No tags found",
+              message: "No tags have been created yet",
+            }}
+            success={tagSuccess}
+            error={tagError}
+            render={(popularTags) => (
+              <div className="mt-7 flex w-full flex-col gap-[30px]">
+                {popularTags.map(({ _id, name, questions }) => (
+                  <TagCard
+                    key={_id}
+                    _id={_id}
+                    name={name}
+                    questions={questions}
+                    showCount
+                    compact
+                  />
+                ))}
+              </div>
+            )}
+          />
         </div>
       </div>
     </section>
