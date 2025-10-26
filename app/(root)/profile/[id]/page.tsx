@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Stats from "@/components/user/Stats";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Profile = async ({ params }: RouteParams) => {
   const { id } = await params;
@@ -28,7 +29,6 @@ const Profile = async ({ params }: RouteParams) => {
   const { user, totalQuestions, totalAnswers } = data!;
   const { _id, name, username, image, portfolio, location, createdAt, bio } =
     user;
-  console.log("🚀 ~ Profile ~ portfolio:", portfolio);
 
   return (
     <>
@@ -89,6 +89,36 @@ const Profile = async ({ params }: RouteParams) => {
         totalAnswers={totalAnswers}
         badges={{ GOLD: 0, SILVER: 0, BRONZE: 0 }}
       />
+
+      <section className="mt-10 flex gap-10">
+        <Tabs defaultValue="top-posts" className="flex-[2]">
+          <TabsList className="background-light800_dark400 min-h-[42px] p-1">
+            <TabsTrigger value="top-posts" className="tab">
+              Top Posts
+            </TabsTrigger>
+            <TabsTrigger value="answers" className="tab">
+              Answers
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent
+            value="top-posts"
+            className="mt-5 flex w-full flex-col gap-7"
+          >
+            List of Questions
+          </TabsContent>
+          <TabsContent value="answers" className="flex w-full flex-col gap-7">
+            List of Answers
+          </TabsContent>
+        </Tabs>
+
+        <div className="flex w-full min-w-[250px] flex-1 flex-col max-lg:hidden">
+          <h3 className="h3-bold text-dark200_light900">Top Tech</h3>
+          <div className="mt-7 flex flex-col gap-4">
+            <p>List of Tags</p>
+            <p>List of Tags</p>
+          </div>
+        </div>
+      </section>
     </>
   );
 };
