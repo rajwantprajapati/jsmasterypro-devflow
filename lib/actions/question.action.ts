@@ -2,6 +2,7 @@
 import action from "../handlers/action";
 import {
   AskQuestionSchema,
+  DeleteQuestionSchema,
   EditQuestionSchema,
   GetQuestionSchema,
   IncrementViewsSchema,
@@ -20,10 +21,13 @@ import {
 import dbConnect from "../mongoose";
 import {
   CreateQuestionParams,
+  DeleteQuestionParams,
   EditQuestionParams,
   GetQuestionParams,
   IncrementViewsParams,
 } from "@/types/action";
+import { Answer, Collection, Vote } from "@/database";
+import { revalidatePath } from "next/cache";
 
 export async function createQuestion(
   params: CreateQuestionParams
@@ -340,6 +344,91 @@ export async function getHotQuestions(): Promise<ActionResponse<Question[]>> {
 
     return { success: true, data: JSON.parse(JSON.stringify(questoions)) };
   } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function deleteQuestion(
+  params: DeleteQuestionParams
+): Promise<ActionResponse> {
+  const validationResult = await action({
+    params,
+    schema: DeleteQuestionSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+
+  const { questionId } = validationResult.params!;
+  const { user } = validationResult.session!;
+
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+
+    const question = await Question.findById(questionId).session(session);
+
+    if (!question) throw new Error("Question not found!");
+
+    if (question.author.toString() !== user?.id) {
+      throw new Error("Your are not authorized to delete this question");
+    }
+
+    // Delete references from Collection
+    Collection.deleteMany({ question: questionId }).session(session);
+
+    // Delete references from TagQuestion Collection
+    TagQuestion.deleteMany({ question: questionId }).session(session);
+
+    // For all tags of question, find them and reduce their count
+    if (question.tags.length > 0) {
+      await Tag.updateMany(
+        { _id: { $in: question.tags } },
+        { $inc: { questions: -1 } },
+        { session }
+      );
+    }
+
+    // Remove all votes of the question
+    await Vote.deleteMany({
+      actionId: questionId,
+      actionType: "question",
+    }).session(session);
+
+    // Remove all the answers and their votes of the question
+    const answers = await Answer.find({ question: questionId }).session(
+      session
+    );
+
+    if (answers.length > 0) {
+      await Answer.deleteMany({ question: questionId }).session(session);
+
+      await Vote.deleteMany({
+        actionId: { $in: answers.map((answer) => answer.id) },
+        actionType: "answer",
+      }).session(session);
+    }
+
+    // Delete Question
+
+    await Question.findByIdAndDelete(questionId).session(session);
+
+    // Commit transaction
+    await session.commitTransaction();
+    session.endSession();
+
+    // Revalidate to reflect immediate changes on UI
+    revalidatePath(`/profile/${user?.id}`);
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    session.abortTransaction();
+    session.endSession();
+
     return handleError(error) as ErrorResponse;
   }
 }
