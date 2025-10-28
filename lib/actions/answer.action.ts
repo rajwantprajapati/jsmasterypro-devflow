@@ -2,14 +2,22 @@
 
 import Answer, { IAnswerDoc } from "@/database/answer.model";
 import { ActionResponse, ErrorResponse } from "@/types/global";
-import { AnswerServerSchema, GetAnswersSchema } from "../validations";
+import {
+  AnswerServerSchema,
+  DeleteAnswerSchema,
+  GetAnswersSchema,
+} from "../validations";
 import action from "../handlers/action";
 import handleError from "../handlers/error";
 import mongoose from "mongoose";
-import { Question } from "@/database";
+import { Question, Vote } from "@/database";
 import { revalidatePath } from "next/cache";
 import ROUTES from "@/constants/routes";
-import { CreateAsnwerParams, GetAnswersParams } from "@/types/action";
+import {
+  CreateAsnwerParams,
+  DeleteAnswerParams,
+  GetAnswersParams,
+} from "@/types/action";
 
 export async function createAnswer(
   params: CreateAsnwerParams
@@ -126,6 +134,56 @@ export async function getAnswers(params: GetAnswersParams): Promise<
         totalAnswer: totalAnswers,
       },
     };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function deleteAnswer(
+  params: DeleteAnswerParams
+): Promise<ActionResponse> {
+  const validationResult = await action({
+    params,
+    schema: DeleteAnswerSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+
+  const { answerId } = validationResult.params!;
+  const { user } = validationResult.session!;
+
+  // const session = await mongoose.startSession();
+
+  try {
+    //  session.startTransaction();
+
+    const answer = await Answer.findById(answerId);
+
+    if (!answer) throw new Error("Answer not found");
+
+    if (answer.author?._id.toString() !== user?.id) {
+      throw new Error("You're not allowed to delete this answer");
+    }
+
+    // reduce the question answers count
+    await Question.findByIdAndUpdate(
+      answer.question,
+      { $inc: { answer: -1 } },
+      { new: true }
+    );
+
+    // delete votes associated with answer
+    await Vote.deleteMany({ actionId: answerId, actionType: "answer" });
+
+    // delete the answer
+    await Answer.findByIdAndDelete(answerId);
+
+    revalidatePath(`/profile/${user?.id}`);
+
+    return { success: true };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }

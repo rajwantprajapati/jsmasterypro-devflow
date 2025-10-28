@@ -16,6 +16,7 @@ import Image from "next/image";
 import { toast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { deleteQuestion } from "@/lib/actions/question.action";
+import { deleteAnswer } from "@/lib/actions/answer.action";
 
 interface Props {
   type: string;
@@ -40,6 +41,7 @@ const EditDeleteAction = ({ type, itemId }: Props) => {
       });
     } else if (type === "Answer") {
       // Call api to delete the answer by itemId
+      await deleteAnswer({ answerId: itemId });
 
       toast({
         title: "Answer Deleted",
