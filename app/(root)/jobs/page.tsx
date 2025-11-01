@@ -1,14 +1,14 @@
+import React from "react";
+
 import JobCard from "@/components/cards/JobCard";
 import JobFilter from "@/components/filters/JobFilter";
 import Pagination from "@/components/Pagination";
-
 import {
   fetchCountries,
   fetchJobs,
   fetchLocation,
 } from "@/lib/actions/job.action";
 import { Job, RouteParams } from "@/types/global";
-import React from "react";
 
 const Jobs = async ({ searchParams }: RouteParams) => {
   const { query, location, page } = await searchParams;

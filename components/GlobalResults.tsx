@@ -1,11 +1,13 @@
+import { ReloadIcon } from "@radix-ui/react-icons";
+import Image from "next/image";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import GlobalFilter from "./filters/GlobalFilter";
-import { ReloadIcon } from "@radix-ui/react-icons";
-import { GlobalSearchedItem } from "@/types/global";
-import Link from "next/link";
-import Image from "next/image";
+
 import { globalSearch } from "@/lib/actions/general.action";
+import { GlobalSearchedItem } from "@/types/global";
+
+import GlobalFilter from "./filters/GlobalFilter";
 
 const GlobalResults = () => {
   const searchParams = useSearchParams();

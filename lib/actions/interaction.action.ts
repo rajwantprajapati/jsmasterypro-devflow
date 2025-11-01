@@ -1,14 +1,16 @@
+import mongoose from "mongoose";
+
+import { User } from "@/database";
 import Interaction, { IInteractionDoc } from "@/database/interaction.model";
 import {
   CreateInteractionParams,
   UpdateReputationParams,
 } from "@/types/action";
 import { ActionResponse, ErrorResponse } from "@/types/global";
+
 import action from "../handlers/action";
-import { createInteractionSchema } from "../validations";
 import handleError from "../handlers/error";
-import mongoose from "mongoose";
-import { User } from "@/database";
+import { createInteractionSchema } from "../validations";
 
 export async function createInteraction(
   params: CreateInteractionParams

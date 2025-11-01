@@ -1,3 +1,5 @@
+import React from "react";
+
 import TagCard from "@/components/cards/TagCard";
 import DataRenderer from "@/components/DataRenderer";
 import CommonFilters from "@/components/filters/CommonFilters";
@@ -8,7 +10,6 @@ import ROUTES from "@/constants/routes";
 import { EMPTY_TAGS } from "@/constants/states";
 import { getTags } from "@/lib/actions/tag.action";
 import { RouteParams } from "@/types/global";
-import React from "react";
 
 const Tags = async ({ searchParams }: RouteParams) => {
   const { page, pageSize, query, filter } = await searchParams;

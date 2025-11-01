@@ -1,4 +1,6 @@
 "use client";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 import {
@@ -12,11 +14,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import Image from "next/image";
 import { toast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
-import { deleteQuestion } from "@/lib/actions/question.action";
 import { deleteAnswer } from "@/lib/actions/answer.action";
+import { deleteQuestion } from "@/lib/actions/question.action";
 
 interface Props {
   type: string;

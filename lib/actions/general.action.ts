@@ -1,11 +1,12 @@
 "use server";
 
+import { Answer, Question, Tag, User } from "@/database";
 import { GlobalSearchParams } from "@/types/action";
 import { ErrorResponse } from "@/types/global";
+
 import action from "../handlers/action";
-import { GlobalSearchSchema } from "../validations";
 import handleError from "../handlers/error";
-import { Answer, Question, Tag, User } from "@/database";
+import { GlobalSearchSchema } from "../validations";
 
 export async function globalSearch(params: GlobalSearchParams) {
   try {

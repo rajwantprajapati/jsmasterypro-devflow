@@ -1,8 +1,10 @@
-import { User } from "@/types/global";
-import React from "react";
-import UserAvatar from "../UserAvatar";
 import Link from "next/link";
+import React from "react";
+
 import ROUTES from "@/constants/routes";
+import { User } from "@/types/global";
+
+import UserAvatar from "../UserAvatar";
 
 const UserCard = ({ _id, name, image, username }: User) => {
   return (

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
 import CommonFilters from "@/components/filters/CommonFilters";
@@ -9,8 +11,6 @@ import { HomePageFilters } from "@/constants/filter";
 import ROUTES from "@/constants/routes";
 import { EMPTY_QUESTION } from "@/constants/states";
 import { getQuestions } from "@/lib/actions/question.action";
-
-import Link from "next/link";
 
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;

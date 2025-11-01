@@ -1,13 +1,12 @@
 "use server";
 
+import { Collection } from "@/database";
 import { CollectionBaseParams } from "@/types/action";
 import { ActionResponse, ErrorResponse } from "@/types/global";
+
 import action from "../handlers/action";
-import { CollectionBaseSchema } from "../validations";
 import handleError from "../handlers/error";
-import { Collection } from "@/database";
-import { revalidatePath } from "next/cache";
-import ROUTES from "@/constants/routes";
+import { CollectionBaseSchema } from "../validations";
 
 export async function hasSavedQuestion(
   params: CollectionBaseParams

@@ -1,8 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { toast } from "@/hooks/use-toast";
 import { incrementViews } from "@/lib/actions/question.action";
-import { useEffect } from "react";
 
 const View = ({ questionId }: { questionId: string }) => {
   const handleIncrementViews = async () => {

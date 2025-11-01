@@ -1,22 +1,8 @@
 "use server";
 
-import {
-  ActionResponse,
-  Badges,
-  ErrorResponse,
-  PaginatedSearchParams,
-} from "@/types/global";
-import action from "../handlers/action";
-import {
-  GetUserQuestionsSchema,
-  GetUserSchema,
-  GetUserTagsSchema,
-  PaginatedSearchParamsSchema,
-  UpdateProfileSchema,
-} from "../validations";
-import handleError from "../handlers/error";
-import { Answer, Question, User } from "@/database";
 import { FilterQuery, PipelineStage, Types } from "mongoose";
+
+import { Answer, Question, User } from "@/database";
 import {
   GetUserAnswersParams,
   GetUserParams,
@@ -24,7 +10,23 @@ import {
   GetUserTagsParams,
   UpdateUserParams,
 } from "@/types/action";
+import {
+  ActionResponse,
+  Badges,
+  ErrorResponse,
+  PaginatedSearchParams,
+} from "@/types/global";
+
+import action from "../handlers/action";
+import handleError from "../handlers/error";
 import { assignBadges } from "../utils";
+import {
+  GetUserQuestionsSchema,
+  GetUserSchema,
+  GetUserTagsSchema,
+  PaginatedSearchParamsSchema,
+  UpdateProfileSchema,
+} from "../validations";
 
 export async function getUsers(
   params: PaginatedSearchParams

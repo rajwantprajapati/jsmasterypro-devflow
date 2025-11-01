@@ -1,6 +1,8 @@
-import { IInteractionDoc } from "@/database/interaction.model";
-import { PaginatedSearchParams } from "./global";
 import mongoose from "mongoose";
+
+import { IInteractionDoc } from "@/database/interaction.model";
+
+import { PaginatedSearchParams } from "./global";
 
 interface SignInWithOAuthParams {
   provider: "github" | "google";

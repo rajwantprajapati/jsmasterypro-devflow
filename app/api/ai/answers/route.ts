@@ -1,10 +1,13 @@
+import { groq } from "@ai-sdk/groq";
+import { generateText } from "ai";
+import { NextResponse } from "next/server";
+
 import handleError from "@/lib/handlers/error";
 import { ValidationError } from "@/lib/http-errors";
 import { AIAnswerSchema } from "@/lib/validations";
 import { APIErrorResponse } from "@/types/global";
-import { groq } from "@ai-sdk/groq";
-import { generateText } from "ai";
-import { NextResponse } from "next/server";
+
+export const maxDuration = 5;
 
 export async function POST(req: Request) {
   const { question, content, userAnswer } = await req.json();

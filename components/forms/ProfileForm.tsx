@@ -1,12 +1,19 @@
 "use client";
 
-import { ProfileSchema } from "@/lib/validations";
-import { User } from "@/types/global";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ReloadIcon } from "@radix-ui/react-icons";
+import { useRouter } from "next/navigation";
 import React, { useTransition } from "react";
 import { useForm } from "react-hook-form";
-
 import * as z from "zod";
+
+import ROUTES from "@/constants/routes";
+import { toast } from "@/hooks/use-toast";
+import { updateUser } from "@/lib/actions/user.action";
+import { ProfileSchema } from "@/lib/validations";
+import { User } from "@/types/global";
+
+import { Button } from "../ui/button";
 import {
   Form,
   FormControl,
@@ -17,12 +24,6 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { Button } from "../ui/button";
-import { ReloadIcon } from "@radix-ui/react-icons";
-import { useRouter } from "next/navigation";
-import { updateUser } from "@/lib/actions/user.action";
-import ROUTES from "@/constants/routes";
-import { toast } from "@/hooks/use-toast";
 
 const ProfileForm = ({ user }: { user: User }) => {
   const router = useRouter();

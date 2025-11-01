@@ -1,11 +1,13 @@
-import React from "react";
-import NavLinks from "./navbar/NavLinks";
-import Link from "next/link";
-import ROUTES from "@/constants/routes";
-import { Button } from "../ui/button";
-import Image from "next/image";
-import { auth, signOut } from "@/auth";
 import { LogOut } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
+
+import { auth, signOut } from "@/auth";
+import ROUTES from "@/constants/routes";
+
+import NavLinks from "./navbar/NavLinks";
+import { Button } from "../ui/button";
 
 const LeftSidebar = async () => {
   const session = await auth();

@@ -1,25 +1,27 @@
 "use server";
 
-import Answer, { IAnswerDoc } from "@/database/answer.model";
-import { ActionResponse, ErrorResponse } from "@/types/global";
-import {
-  AnswerServerSchema,
-  DeleteAnswerSchema,
-  GetAnswersSchema,
-} from "../validations";
-import action from "../handlers/action";
-import handleError from "../handlers/error";
 import mongoose from "mongoose";
-import { Question, Vote } from "@/database";
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
+
 import ROUTES from "@/constants/routes";
+import { Question, Vote } from "@/database";
+import Answer, { IAnswerDoc } from "@/database/answer.model";
 import {
   CreateAsnwerParams,
   DeleteAnswerParams,
   GetAnswersParams,
 } from "@/types/action";
-import { after } from "next/server";
+import { ActionResponse, ErrorResponse } from "@/types/global";
+
 import { createInteraction } from "./interaction.action";
+import action from "../handlers/action";
+import handleError from "../handlers/error";
+import {
+  AnswerServerSchema,
+  DeleteAnswerSchema,
+  GetAnswersSchema,
+} from "../validations";
 
 export async function createAnswer(
   params: CreateAsnwerParams

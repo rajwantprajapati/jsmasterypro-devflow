@@ -1,9 +1,10 @@
 "use client";
 
-import { GlobalSearchFilters } from "@/constants/filter";
-import { formUrlQuery, removeKeysFromUrlQuery } from "@/lib/url";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
+
+import { GlobalSearchFilters } from "@/constants/filter";
+import { formUrlQuery, removeKeysFromUrlQuery } from "@/lib/url";
 const GlobalFilter = () => {
   const router = useRouter();
   const searchParams = useSearchParams();

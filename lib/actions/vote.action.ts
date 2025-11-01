@@ -1,5 +1,11 @@
 "use server";
 
+import mongoose, { ClientSession } from "mongoose";
+import { revalidatePath } from "next/cache";
+import { after } from "next/server";
+
+import ROUTES from "@/constants/routes";
+import { Answer, Question, Vote } from "@/database";
 import {
   CreateVoteParams,
   HasVotedParams,
@@ -7,19 +13,15 @@ import {
   UpdateVoteCountParams,
 } from "@/types/action";
 import { ActionResponse, ErrorResponse } from "@/types/global";
+
+import { createInteraction } from "./interaction.action";
 import action from "../handlers/action";
+import handleError from "../handlers/error";
 import {
   CreateVoteSchema,
   HasVotedSchema,
   UpdateVoteCountSchema,
 } from "../validations";
-import handleError from "../handlers/error";
-import mongoose, { ClientSession } from "mongoose";
-import { Answer, Question, Vote } from "@/database";
-import { revalidatePath } from "next/cache";
-import ROUTES from "@/constants/routes";
-import { after } from "next/server";
-import { createInteraction } from "./interaction.action";
 
 export async function updateVoteCount(
   params: UpdateVoteCountParams,

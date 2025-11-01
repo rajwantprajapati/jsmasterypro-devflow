@@ -1,8 +1,9 @@
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
 import { BADGE_CRITERIA } from "@/constants";
 import { techMap } from "@/constants/techMap";
 import { Badges } from "@/types/global";
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

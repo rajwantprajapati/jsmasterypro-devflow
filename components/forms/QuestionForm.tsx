@@ -1,11 +1,22 @@
 "use client";
 
-import { AskQuestionSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
-import dynamic from "next/dynamic";
 import { MDXEditorMethods } from "@mdxeditor/editor";
+import { ReloadIcon } from "@radix-ui/react-icons";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import React, { useRef, KeyboardEvent, useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import ROUTES from "@/constants/routes";
+import { toast } from "@/hooks/use-toast";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
+import { AskQuestionSchema } from "@/lib/validations";
+import { Question } from "@/types/global";
+
+import TagCard from "../cards/TagCard";
+import { Button } from "../ui/button";
 import {
   Form,
   FormControl,
@@ -16,15 +27,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { z } from "zod";
-import TagCard from "../cards/TagCard";
-import { createQuestion, editQuestion } from "@/lib/actions/question.action";
-import { toast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
-import ROUTES from "@/constants/routes";
-import { ReloadIcon } from "@radix-ui/react-icons";
-import { Question } from "@/types/global";
 
 // This is the only place InitializedMDXEditor is imported directly.
 const Editor = dynamic(() => import("@/components/editor"), {
@@ -105,7 +107,7 @@ const QuestionForm = ({ question, isEdit }: Params) => {
         }
 
         if (result.data) {
-          router.push(ROUTES.QUESTION(result.data._id));
+          router.push(ROUTES.QUESTION(result.data._id as string));
         } else {
           toast({
             title: `Error ${result.status}`,

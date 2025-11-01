@@ -1,8 +1,11 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
+
+import { formUrlQuery } from "@/lib/url";
+import { cn } from "@/lib/utils";
+
 import {
   Select,
   SelectContent,
@@ -11,7 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { formUrlQuery } from "@/lib/url";
 
 interface Filter {
   name: string;

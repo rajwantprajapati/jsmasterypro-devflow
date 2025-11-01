@@ -1,9 +1,10 @@
 /* eslint-disable camelcase */
-import { processJobTitle } from "@/lib/utils";
-import { Job } from "@/types/global";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+
+import { processJobTitle } from "@/lib/utils";
+import { Job } from "@/types/global";
 
 interface JobCardProps {
   job: Job;

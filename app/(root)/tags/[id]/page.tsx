@@ -1,3 +1,5 @@
+import React from "react";
+
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/DataRenderer";
 import CommonFilters from "@/components/filters/CommonFilters";
@@ -8,7 +10,6 @@ import ROUTES from "@/constants/routes";
 import { EMPTY_QUESTION } from "@/constants/states";
 import { getTagQuestions } from "@/lib/actions/tag.action";
 import { RouteParams } from "@/types/global";
-import React from "react";
 
 const Page = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;

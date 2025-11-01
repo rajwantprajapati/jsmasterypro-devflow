@@ -1,13 +1,15 @@
-import { Answer } from "@/types/global";
-import React, { Suspense } from "react";
-import UserAvatar from "../UserAvatar";
 import Link from "next/link";
+import React, { Suspense } from "react";
+
 import ROUTES from "@/constants/routes";
-import { cn, getTimeStamp } from "@/lib/utils";
-import Preview from "../editor/Preview";
-import Votes from "../votes/Votes";
 import { hasVoted } from "@/lib/actions/vote.action";
+import { cn, getTimeStamp } from "@/lib/utils";
+import { Answer } from "@/types/global";
+
+import Preview from "../editor/Preview";
 import EditDeleteAction from "../user/EditDeleteAction";
+import UserAvatar from "../UserAvatar";
+import Votes from "../votes/Votes";
 
 interface Props extends Answer {
   containerClasses?: string;

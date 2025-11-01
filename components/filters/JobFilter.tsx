@@ -1,6 +1,12 @@
 "use client";
 
+import Image from "next/image";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
+
+import { formUrlQuery } from "@/lib/url";
+import { Country } from "@/types/global";
+
 import LocalSearch from "../search/LocalSearch";
 import {
   Select,
@@ -10,10 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Country } from "@/types/global";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { formUrlQuery } from "@/lib/url";
-import Image from "next/image";
 
 interface JobFilterProps {
   countriesList: Country[];

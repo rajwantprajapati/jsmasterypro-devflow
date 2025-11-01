@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
-import { Button } from "../ui/button";
 import { useRouter, useSearchParams } from "next/navigation";
-import { cn } from "@/lib/utils";
+import React, { useState } from "react";
+
 import { formUrlQuery, removeKeysFromUrlQuery } from "@/lib/url";
+import { cn } from "@/lib/utils";
+
+import { Button } from "../ui/button";
 
 const filters = [
   { name: "Newest", value: "newest" },
