@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { formUrlQuery, removeKeysFromUrlQuery } from "@/lib/url";
 
@@ -28,15 +28,21 @@ const LocalSearch = ({
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
 
-  const [searchQuery, setSearchQuery] = useState(query);
+  const [search, setSearch] = useState(query);
+  const previousSearchRef = useRef(search);
 
   useEffect(() => {
+    // Only trigger if search actually changed
+    if (previousSearchRef.current === search) return;
+
+    previousSearchRef.current = search;
+
     const delayedDebounce = setTimeout(() => {
-      if (searchQuery) {
+      if (search) {
         const newUrl = formUrlQuery({
           params: searchParams.toString(),
           key: "query",
-          value: searchQuery,
+          value: search,
         });
 
         router.push(newUrl, { scroll: false });
@@ -53,11 +59,11 @@ const LocalSearch = ({
     }, 300);
 
     return () => clearTimeout(delayedDebounce);
-  }, [searchQuery, router, searchParams, route, pathname]);
+  }, [search, router, searchParams, route, pathname]);
 
   return (
     <div
-      className={`background-light800_darkgradient flex min-h-[56px] grow items-center gap-4 rounded-[10px] px-4 ${otherClasses}`}
+      className={`background-light800_darkgradient flex min-h-14 grow items-center gap-4 rounded-[10px] px-4 ${otherClasses}`}
     >
       {iconPosition === "left" && (
         <Image
@@ -72,8 +78,8 @@ const LocalSearch = ({
       <Input
         type="text"
         placeholder={placeholder}
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
         className="paragraph-regular no-focus placeholder text-dark400_light700 border-none shadow-none outline-none"
       />
 
