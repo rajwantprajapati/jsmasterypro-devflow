@@ -23,7 +23,7 @@ const config: Config = {
   ],
 
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/components/$1",
+    "^@/(.*)$": "<rootDir>/$1",
   },
 };
  
