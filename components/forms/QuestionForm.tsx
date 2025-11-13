@@ -180,7 +180,7 @@ const QuestionForm = ({ question, isEdit }: Params) => {
               </FormLabel>
               <FormControl>
                 <Editor
-                  editorRef={editorRef}
+                  ref={editorRef}
                   value={field.value}
                   fieldChange={field.onChange}
                 />

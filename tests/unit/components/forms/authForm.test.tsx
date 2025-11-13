@@ -106,25 +106,36 @@ describe("AuthForm Component", () => {
         })
 
         describe("Failure Handling", () => {
-            it("should show success toast and redirect to home", async () => {
-                const onSubmit = jest.fn().mockResolvedValue({
-                    success: false,
-                    status: 401,
-                    error: { message: 'Invalid credentials'}
-                })
+            it("should show error toast message in case of failure", async () => {
+              const onSubmit = jest.fn().mockResolvedValue({
+                success: false,
+                status: 401,
+                error: { message: "Invalid credentials" },
+              });
 
-                render(<AuthForm schema={SignInSchema} onSubmit={onSubmit} defaultValues={{email: "", password: ""}} formType="SIGN_IN" />)
+              render(
+                <AuthForm
+                  schema={SignInSchema}
+                  onSubmit={onSubmit}
+                  defaultValues={{ email: "", password: "" }}
+                  formType="SIGN_IN"
+                />
+              );
 
-                const emailInput = screen.getByLabelText("Email Address")
-                const passwordInput = screen.getByLabelText("Password")
-                const submitButton = screen.getByRole("button")
+              const emailInput = screen.getByLabelText("Email Address");
+              const passwordInput = screen.getByLabelText("Password");
+              const submitButton = screen.getByRole("button");
 
-                await user.type(emailInput, "test@valid.com")
-                await user.type(passwordInput, "1134@Pw")
-                await user.click(submitButton)
+              await user.type(emailInput, "test@valid.com");
+              await user.type(passwordInput, "1134@Pw");
+              await user.click(submitButton);
 
-                expect(mockToast).toHaveBeenCalledWith({title: 'Error 401', description: "Invalid credentials", variant: 'destructive'})
-            })
+              expect(mockToast).toHaveBeenCalledWith({
+                title: "Error 401",
+                description: "Invalid credentials",
+                variant: "destructive",
+              });
+            });
         })
     })
 
