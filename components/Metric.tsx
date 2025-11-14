@@ -5,8 +5,8 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 interface Props {
-  imgUrl: string;
-  alt: string;
+  imgUrl?: string;
+  alt?: string;
   value: string | number;
   title: string;
   href?: string;
@@ -16,7 +16,7 @@ interface Props {
   titleStyles?: string;
 }
 
-const Metric = ({
+export const Metric = ({
   imgUrl,
   alt,
   href,
@@ -28,13 +28,15 @@ const Metric = ({
 }: Props) => {
   const metricContent = (
     <>
-      <Image
-        src={imgUrl}
-        alt={alt}
-        width={16}
-        height={16}
-        className={`rounded-full object-contain ${imgStyles}`}
-      />
+      {imgUrl && alt && (
+        <Image
+          src={imgUrl}
+          alt={alt}
+          width={16}
+          height={16}
+          className={`rounded-full object-contain ${imgStyles}`}
+        />
+      )}
       <p className={`${textStyles} flex items-center gap-1`}>
         {value}
 
@@ -55,5 +57,3 @@ const Metric = ({
     <div className="flex-center gap-1">{metricContent}</div>
   );
 };
-
-export default Metric;
